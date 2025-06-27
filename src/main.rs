@@ -1,34 +1,47 @@
 use iced::{Element,Sandbox, Settings};
-use iced::widget::text;
+use iced::widget::{text_editor,container};
 fn main() -> iced::Result{
     Editor::run(Settings::default())
 }
 
-struct Editor;
-#[derive(Debug)]
-enum Message{}
+struct Editor{
+    content : text_editor::Content //used to store the internal state of the text editor like the user text buffer
+                                   // cursor posn, slection
+}
+#[derive(Debug,Clone)]
+enum Message{
+    Edit(text_editor::Action)// so text_editor::action represents a user action in the txt editor like typing a char 
+                             // pressing backspace/del, moving the cursor, selecting text, pasting from clipboard
+                             // these messages are represented as this enum 
+}
 
 
 impl Sandbox for Editor  {
-    type Message = Message; // these are user interactions or events that happen during the cours eof the thingy
-                            // the messages that our application can ahndle or react to ex: user pressing a button is a message
-                            // user typing is a message
+    type Message = Message; 
 
-    fn new() -> Self{  //initiliazing the state, basically telling the iced to this is how our state should be in
-        Self           // when the state starts
+    fn new() -> Self{  
+        Self {
+            content: text_editor::Content::new(), //makes a new plain editor
+        }           
     }
 
-    fn title(&self) -> String { // title that will be displayed on the window of our application
+    fn title(&self) -> String { 
         String::from("editor cuhh ")
     }
 
-    fn update(&mut self, message: Self::Message) { //here we update the application state, with the change in messages 
-        match message {}
+    fn update(&mut self, message: Self::Message) {
+        match message {
+            Message::Edit(action) =>{//mathches that if the message is message::edit(action) then do self.content.edit(action)
+                self.content.edit(action);
+            }
+        }
     }
 
-    fn view(&self) -> Element<'_, Message> { // widgets that comprise the usewr interface orr elements
-        text("hello, iced!").into() // if a user interacts with these widgets, then it results in producing a message 
-                                    // and the message is fed to the update above, it changes the state and gives back the view
-    } //the .into() converts the text widget into a generic widget( Element widget) so what view does is u can returna any generic widget u want
-    //view -> update -> view -> update, perpetual cycle of this 
+
+    fn view(&self) -> Element<'_, Message> { 
+        let input = text_editor(&self.content).on_edit(Message::Edit);
+
+        container(input).padding(10).into()//used to contain other widgets, add padding, center them etc etc
+    }  
 }
+//come back to this later
