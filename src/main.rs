@@ -1,5 +1,5 @@
-use iced::{Theme, Element,Sandbox, Settings};
-use iced::widget::{column, container, text, text_editor};
+use iced::{Element, Length, Sandbox, Settings, Theme};
+use iced::widget::{column, container, row, text, text_editor,horizontal_space};
 fn main() -> iced::Result{
     Editor::run(Settings::default())
 }
@@ -42,8 +42,10 @@ impl Sandbox for Editor  {
 
             text(format!("{}:{}", line+1 , column + 1))
         };
-
-        container(column![input, position]).padding(10).into()
+        let status_bar = row![horizontal_space(Length::Fill), position];
+        container(column![input, status_bar].spacing(10))
+        .padding(10)
+        .into()
     }
 
     fn theme(&self) -> Theme {
