@@ -1,4 +1,4 @@
-use iced::{Element, Length, Sandbox, Settings, Theme};
+use iced::{executor, Application, Command, Element, Length, Settings, Theme};
 use iced::widget::{column, container, row, text, text_editor,horizontal_space};
 fn main() -> iced::Result{
     Editor::run(Settings::default())
@@ -13,25 +13,30 @@ enum Message{
 }
 
 
-impl Sandbox for Editor  {
+impl Application for Editor  {
     type Message = Message; 
-
-    fn new() -> Self{  
-        Self {
+    type Flags = (); // represent any data for an application to be initialized, used as an argument to self
+    type Executor = executor::Default; //engine used to run async tasks in bg
+    type Theme = Theme; // self explanatory
+    fn new(_flags : Self::Flags) -> (Self, Command<Message>){  
+        (
+            Self {
             content: text_editor::Content::with(include_str!("main.rs")), 
-        }           
-    }
-
+        }, 
+        Command::none(),         
+    )
+}
     fn title(&self) -> String { 
         String::from("editor cuhh ")
     }
 
-    fn update(&mut self, message: Self::Message) {
+    fn update(&mut self, message: Self::Message) -> Command<Message> {
         match message {
             Message::Edit(action) =>{
                 self.content.edit(action);
             }
         }
+        Command::none()
     }
 
 
