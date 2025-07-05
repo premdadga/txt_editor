@@ -5,4 +5,5 @@ edition = "2024"
 
 [dependencies]
 iced = { git = "https://github.com/iced-rs/iced.git", rev = "refs/tags/text-editor" , features = ["debug"] }
-tokio = { version = "1.46.0" , features = ["fs"] }
+tokio = { version = "1.46.1" , features = ["fs"] }
+rfd = "0.15.3"
